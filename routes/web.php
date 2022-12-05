@@ -29,6 +29,7 @@ Route::delete('checkout/{id}', [PesanController::class , 'delete']);
 Route::delete('hapus/{id}', [PesanController::class, 'hapus'])->name('hapus');
 Route::post('bayar', [PesanController::class, 'bayar'])->name('bayar');
 Route::get('/checkout', [PesanController::class, 'checkout'])->name('checkout');
+Route::get('cari', [PesanController::class, 'cari'])->name('cari');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -27,6 +27,20 @@ class PesanController extends Controller
         ->first();
     	return view('pesan.index', ['barangid' => $baranglist ]);
     }
+
+    public function cari(Request $request)
+    {
+        // menangkap data pencarian
+        $cari = $request->cari;
+
+        // mengambil data dari table pegawai sesuai pencarian data
+        $data = DB::table('barangs')
+            ->where('nama_barang', 'like', "%" . $cari . "%")
+            ->get();
+
+        // mengirim data pegawai ke view index
+        return view('dashboard', ['barangs' =>$data]);}
+
     public function pesan(Request $request, $id)
     {
     	//$baranglist = Barang::where('id', $id)->first();

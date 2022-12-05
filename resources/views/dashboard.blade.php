@@ -1,7 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    <a href="{{ url('checkout') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Check Out</a></h2>
+        <div class="container">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <a href="{{ url('checkout') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Check Out</a></h2>
+                    <form action="cari" method="GET">
+                        <input type="text" name="cari" placeholder="Cari apa ? .." value="{{ old('cari') }}">
+                        <input type="submit" value="">
+                    </form>
+                    <br>
+          </div>
 </x-slot>
     @section('content')
 <div class="container">
