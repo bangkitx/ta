@@ -3,11 +3,12 @@
         <div class="container">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a href="{{ url('checkout') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Check Out</a></h2>
-                    <form action="cari" method="GET">
+                <a href="{{ url('add') }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> add</a></h2>
+                    {{-- <form action="cari" method="GET">
                         <input type="text" name="cari" placeholder="Cari apa ? .." value="{{ old('cari') }}">
                         <input type="submit" value="">
                     </form>
-                    <br>
+                    <br> --}}
           </div>
 </x-slot>
     @section('content')
@@ -31,6 +32,18 @@
                     {{ $barangs->keterangan }}
           </p>
           <a href="{{ url('pesan') }}/{{ $barangs->id }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Pesan</a>
+          <a href="{{ url('edit') }}/{{ $barangs->id }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> edit</a>
+
+          <form class="ml-1 form-inline" method="POST" action="{{ route('hapusdata', $barangs->id) }}">
+            @csrf
+            @method('delete')
+            <br><button onclick="return confirm('{{ __('Anda Yakin Ingin Menghapus?') }}')"
+                type="submit" class="btn btn-danger"
+               ><i class="fa-solid fa-trash"></i>
+                Hapus
+            </button>
+        </form>
+
         </div>
       </div>
     </div>

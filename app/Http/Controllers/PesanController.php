@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 use Auth;
 use Carbon\Carbon;
@@ -19,6 +20,7 @@ class PesanController extends Controller
         $this->middleware('auth');
     }
 
+
     public function index($id)
     {
     	// $baranglist = Barang::where('id', $id)->first();
@@ -27,19 +29,87 @@ class PesanController extends Controller
         ->first();
     	return view('pesan.index', ['barangid' => $baranglist ]);
     }
+    public function create() {
 
-    public function cari(Request $request)
+        return view('pesan.add');
+        }
+        public function store (Request $request) {$request->validate([
+
+                'id' => 'required',
+                'nama_barang' => 'required',
+                'gambar' => 'required',
+                'harga' => 'required',
+                'stok' => 'required',
+                'keterangan' => 'required',
+        ]);
+        // Menggunakan Query Builder Laravel dan Named Bindings untuk valuesnya
+        DB::insert('INSERT INTO barangs (id, nama_barang, gambar, harga, stok, keterangan ) VALUES (:id, :nama_barang, :gambar, :harga, :stok, :keterangan )',
+        [
+            'id' => $request->id,
+            'nama_barang' => $request->nama_barang,
+            'gambar' => $request->gambar,
+            'harga' => $request->harga,
+            'stok' => $request->stok,
+            'keterangan' => $request->keterangan,
+        ]
+        );
+        return redirect()->route('dashboard')->with('success', 'Data Admin berhasil disimpan');
+        }
+
+        public function hapusdata($id)
     {
-        // menangkap data pencarian
-        $cari = $request->cari;
+        DB::delete('DELETE FROM barangs WHERE id =  :id', ['id' => $id]);
+        return redirect()->route('dashboard')->with('success', 'Data berhasil dihapus');
+    }
 
-        // mengambil data dari table pegawai sesuai pencarian data
-        $data = DB::table('barangs')
-            ->where('nama_barang', 'like', "%" . $cari . "%")
-            ->get();
+    public function edit($id)
+    {
+    	// $baranglist = Barang::where('id', $id)->first();
+        $baranglist = DB::table ('barangs')
+        ->where('id', $id)
+        ->first();
 
-        // mengirim data pegawai ke view index
-        return view('dashboard', ['barangs' =>$data]);}
+    	return view('pesan.edit', ['barangid' => $baranglist ]);
+
+
+    }
+    public function update($id, Request $request)
+    {
+            $request->validate([
+                // 'id' => 'required',
+                // 'nama_barang' => 'required',
+                // 'gambar' => 'required',
+                'harga' => 'required',
+                'stok' => 'required',
+                'keterangan' => 'required',]);
+
+    DB::update('UPDATE barangs SET harga = :harga, stok = :stok, keterangan = :keterangan WHERE id = :id',
+    [
+        'id' => $id,
+        // 'id' => $request->id,
+        // 'nama_barang' => $request->nama_barang,
+        // 'gambar' => $request->gambar,
+        'harga' => $request->harga,
+        'stok' => $request->stok,
+        'keterangan' => $request->keterangan,
+    ]
+    );
+
+    return redirect()->route('dashboard')->with('success', 'Data berhasil diubah');
+}
+
+    // public function cari(Request $request)
+    // {
+    //     // menangkap data pencarian
+    //     $cari = $request->cari;
+
+    //     // mengambil data dari table pegawai sesuai pencarian data
+    //     $data = DB::table('barangs')
+    //         ->where('nama_barang', 'like', "%" . $cari . "%")
+    //         ->get();
+
+    //     // mengirim data pegawai ke view index
+    //     return view('dashboard', ['barangs' =>$data]);}
 
     public function pesan(Request $request, $id)
     {
@@ -128,12 +198,17 @@ class PesanController extends Controller
     	}
 
     	//jumlah total
-    	$pesanan = DB::table ('pesanans')
-        ->where('user_id', Auth::user()->id)
-        ->where('status',0)
-        ->first();
+    	// $pesanan = DB::table ('pesanans')
+        // ->where('user_id', Auth::user()->id)
+        // ->where('status',0)
+        // ->update();
 
-    	$pesanan->jumlah_harga = $pesanan->jumlah_harga+$baranglist->harga*$request->jumlah_pesan;
+        $pesanan = DB::update('update pesanans set jumlah_harga = jumlah_harga + :harga where user_id = :user_id and status = 0', [
+            'harga' => $baranglist->harga*0.5*$request->jumlah_pesan,
+            'user_id' => Auth::user()->id
+        ]);
+
+    	// $pesanan->jumlah_harga = $pesanan->jumlah_harga+$baranglist->harga*$request->jumlah_pesan;
     	//$pesanan->update();
 
     	return redirect('dashboard');

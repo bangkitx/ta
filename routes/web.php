@@ -24,8 +24,15 @@ Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboar
 Route::get('pesan/{id}', [PesanController::class , 'index']);
 Route::post('pesan/{id}', [PesanController::class , 'pesan']);
 
+Route::get('edit/{id}', [PesanController::class , 'edit'])->name('Pesan.edit');
+Route::post('update/{id}', [PesanController::class,  'update'])->name('Pesan.update');
+
+Route::get('add', [PesanController::class, 'create'])->name('pesan.create');
+Route::post('store', [PesanController::class, 'store'])->name('pesan.store');
+Route::delete('hapusdata/{id}', [PesanController::class, 'hapusdata'])->name('hapusdata');
+
 // Route::post('checkout', [PesanController::class , 'checkout'])->name('checkout');
-Route::delete('checkout/{id}', [PesanController::class , 'delete']);
+// Route::delete('checkout/{id}', [PesanController::class , 'delete']);
 Route::delete('hapus/{id}', [PesanController::class, 'hapus'])->name('hapus');
 Route::post('bayar', [PesanController::class, 'bayar'])->name('bayar');
 Route::get('/checkout', [PesanController::class, 'checkout'])->name('checkout');
