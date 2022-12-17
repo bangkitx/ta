@@ -39,6 +39,13 @@
                         <button type="submit" class="btn btn-danger"><i
                                 class="fa fa-trash">Hapus</i></button>
                     </form>
+                    <form action="{{ url('hapus') }}/{{ $pesanan_detail->pesanan_detail_id }}"
+                        method="post">
+                        @csrf
+                        {{ method_field('DELETE') }}
+                        <button type="submit" class="btn btn-danger"><i
+                                class="fa fa-trash">Soft Delete</i></button>
+                    </form>
                 </td>
             </tr>
             @endforeach
